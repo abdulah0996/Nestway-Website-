@@ -1,7 +1,10 @@
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { countryImages } from '../../assets/editorialImages.js';
+import panorama from '../../assets/destinations-panorama.jpg';
 import { PageContainer } from '../../components/layout/PageContainer.jsx';
 import { Reveal } from '../../components/motion/Reveal.jsx';
+import { JourneyIcon } from './JourneyIcon.jsx';
 
 const fallbacks = [
   { _id: 'home-story-1', name: 'Ayesha R.', role: 'Master’s student', country: 'Australia', rating: 5, content: 'Nestway turned a confusing set of choices into a clear university and visa plan. I always knew what came next.' },
@@ -12,17 +15,38 @@ const fallbacks = [
 export function TestimonialsSection({ query }) {
   const live = Array.isArray(query.data) ? query.data.filter((item) => item.isPublished !== false) : [];
   const testimonials = (live.length ? live : fallbacks).slice(0, 3);
+  const track = useRef(null);
+  const [active, setActive] = useState(0);
+
+  function updateActive() {
+    const firstCard = track.current?.firstElementChild;
+    if (!firstCard) return;
+    const maximumScroll = track.current.scrollWidth - track.current.clientWidth;
+    const atEnd = maximumScroll > 1 && track.current.scrollLeft >= maximumScroll - 2;
+    setActive(atEnd ? testimonials.length - 1 : Math.max(0, Math.min(testimonials.length - 1, Math.round(track.current.scrollLeft / (firstCard.offsetWidth + 16)))));
+  }
+
+  function moveStory(direction) {
+    const firstCard = track.current?.firstElementChild;
+    if (!firstCard) return;
+    track.current.scrollBy({ left: direction * (firstCard.offsetWidth + 16), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  }
 
   return (
-    <section className="overflow-hidden bg-brand py-24 text-white sm:py-32">
+    <section className="stories-section" aria-labelledby="client-stories-title">
       <PageContainer>
-        <div className="flex flex-col justify-between gap-7 md:flex-row md:items-end">
-          <Reveal><p className="eyebrow text-gold-light">Client perspective</p><h2 className="display-title max-w-4xl text-white">Plans become milestones. <em className="text-gold-light">Milestones become stories.</em></h2></Reveal>
-          <Reveal delay={.08}><Link to="/success-stories" className="inline-flex items-center gap-3 text-sm font-bold text-white">View success stories <span className="text-gold" aria-hidden="true">&rarr;</span></Link></Reveal>
-        </div>
-
-        {query.isPending ? <div className="mt-10 grid gap-4 sm:mt-14 lg:grid-cols-3" role="status" aria-label="Loading client stories">{Array.from({ length: 3 }, (_, index) => <div key={index} className="h-80 animate-pulse rounded-[2rem] bg-white/[.06] sm:h-96" />)}</div> : <div className="mobile-snap-row -mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 sm:mt-14 md:mx-0 md:grid md:grid-cols-2 md:px-0 lg:grid-cols-3">{testimonials.map((story, index) => <motion.figure key={story._id || story.name} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .25 }} transition={{ delay: index * .05, duration: .45 }} whileHover={{ y: -3 }} className="mobile-snap-card mobile-snap-card--testimonial flex min-h-[20rem] snap-center flex-col rounded-[2rem] border border-white/15 bg-white/[.07] p-6 shadow-card md:min-h-[23rem] md:p-8"><div className="text-xs tracking-[.14em] text-gold-light" aria-label={`${story.rating || 5} out of 5 stars`}>{'★'.repeat(story.rating || 5)}</div><blockquote className="mt-7 font-display text-[1.35rem] font-medium leading-[1.4] sm:mt-9 sm:text-[1.55rem]">&ldquo;{story.content}&rdquo;</blockquote><figcaption className="mt-auto flex items-center gap-4 border-t border-white/15 pt-6 sm:pt-7"><div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/20 bg-gold-light text-sm font-bold text-brand sm:size-12">{story.photoUrl ? <img src={story.photoUrl} alt={`${story.name} profile`} className="size-full object-cover" loading="lazy" /> : story.name.charAt(0)}</div><div className="min-w-0"><p className="font-semibold">{story.name}</p><p className="mt-1 text-xs text-white/55">{story.role || 'Nestway client'}{story.country ? ` · ${story.country}` : ''}</p></div></figcaption></motion.figure>)}</div>}
-        {query.isError && <p className="mt-6 text-sm text-white/45">Live testimonials are temporarily unavailable; showing selected client journeys.</p>}
+        <Reveal className="stories-heading"><div><p className="eyebrow">The people behind the plans</p><h2 id="client-stories-title" className="display-title">A new chapter.<br /><em>In their words.</em></h2><p className="stories-intro">Different ambitions. Different destinations. Personal guidance that makes the journey feel clearer.</p></div><Link to="/success-stories" className="stories-link">Explore client stories <JourneyIcon name="arrow" /></Link></Reveal>
+        {query.isPending ? <div className="stories-loading" role="status" aria-label="Loading client stories">{Array.from({ length: 3 }, (_, index) => <div key={index} className="animate-pulse" />)}</div> : <>
+          <div ref={track} onScroll={updateActive} className="stories-track mobile-snap-row" role="region" aria-label="Client stories" tabIndex={0}>
+            {testimonials.map((story) => {
+              const countryKey = (story.country || '').toLowerCase().replaceAll(' ', '-');
+              const rating = Math.max(1, Math.min(5, Number(story.rating) || 5));
+              return <figure key={story._id || story.name} className="story-card"><div className="story-destination"><img src={countryImages[countryKey] || panorama} alt="" loading="lazy" /><div /><span><JourneyIcon name="pin" />{story.country || 'A world of possibilities'}</span><span className="story-quote-mark" aria-hidden="true">“</span></div><div className="story-body"><div className="story-stars" aria-label={`${rating} out of 5 stars`}>{'★'.repeat(rating)}</div><blockquote>“{story.content}”</blockquote><figcaption><div className="story-avatar">{story.photoUrl ? <img src={story.photoUrl} alt="" loading="lazy" /> : (story.name || 'N').charAt(0)}</div><div><p>{story.name}</p><span>{story.role || 'Nestway client'}</span></div><span className="story-signature" aria-hidden="true">↗</span></figcaption></div></figure>;
+            })}
+          </div>
+          {testimonials.length > 1 && <div className="stories-controls"><div className="stories-position" aria-live="polite"><strong>{String(active + 1).padStart(2, '0')}</strong><span>/ {String(testimonials.length).padStart(2, '0')}</span><span className="stories-progress">{testimonials.map((story, index) => <i key={story._id || story.name} className={index === active ? 'is-active' : ''} />)}</span></div><div className="stories-buttons"><button type="button" onClick={() => moveStory(-1)} disabled={active === 0} aria-label="Previous client story"><JourneyIcon name="arrow" /></button><button type="button" onClick={() => moveStory(1)} disabled={active === testimonials.length - 1} aria-label="Next client story"><JourneyIcon name="arrow" /></button></div></div>}
+        </>}
+        {query.isError && <p className="stories-status">Selected client perspectives from Nestway.</p>}
       </PageContainer>
     </section>
   );

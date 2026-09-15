@@ -1,8 +1,29 @@
+import { Link } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer.jsx';
 import { Reveal } from '../../components/motion/Reveal.jsx';
+import { JourneyIcon } from './JourneyIcon.jsx';
 
-const journey = ['Pakistan', 'Consultation', 'Application', 'Visa approval', 'New country'];
+const journey = [
+  { icon: 'compass', label: 'Discover', title: 'Start with your story.', description: 'Share your goals, experience and circumstances. We help you understand the pathways worth exploring.', outcome: 'A clearer sense of direction' },
+  { icon: 'route', label: 'Plan', title: 'Make an informed choice.', description: 'Compare destinations and requirements, then shape a practical plan around your priorities.', outcome: 'Your personalised next steps' },
+  { icon: 'file', label: 'Prepare', title: 'Bring every detail together.', description: 'Work through the documents and application requirements with guidance on what to prepare and why.', outcome: 'A carefully prepared application' },
+  { icon: 'plane', label: 'Move forward', title: 'Be ready for what comes next.', description: 'Understand the next stage, from application updates to practical preparations if your visa is granted.', outcome: 'Confidence for your next chapter' },
+];
 
 export function SuccessStories() {
-  return <section id="success-stories" className="overflow-hidden bg-white py-24 sm:py-32"><PageContainer><Reveal><p className="eyebrow">Success, in motion</p><div className="grid gap-5 sm:gap-8 lg:grid-cols-2"><h2 className="display-title">Every approval begins with <em className="text-gold-dark">a brave first step.</em></h2><p className="self-end border-l border-gold pl-5 font-display text-xl leading-snug text-brand sm:pl-6 sm:text-2xl">From the first question to the first day in a new country, every milestone should feel clear and considered.</p></div></Reveal><div className="relative mt-12 sm:mt-20"><div className="absolute left-5 right-5 top-5 hidden h-px bg-brand/15 sm:block" /><div className="grid sm:grid-cols-5 sm:gap-8">{journey.map((stage, index) => <Reveal key={stage} delay={index * .06}><div className="relative grid grid-cols-[2.75rem_1fr] gap-4 pb-8 last:pb-0 sm:block sm:pb-0"><span className={`relative z-10 grid size-10 place-items-center rounded-full border text-xs font-bold ${index === journey.length - 1 ? 'border-gold bg-gold text-brand' : 'border-brand/20 bg-white text-brand'}`}>0{index + 1}</span>{index < journey.length - 1 && <span className="absolute bottom-0 left-5 top-10 w-px bg-brand/10 sm:hidden" aria-hidden="true" />}<div><p className="font-display text-2xl font-semibold leading-tight text-brand sm:mt-5">{stage}</p><p className="mt-1.5 text-xs leading-5 text-ink-muted sm:mt-2">{index === 0 ? 'A goal takes shape.' : index === 4 ? 'A new chapter begins.' : 'A clear step forward.'}</p></div></div></Reveal>)}</div></div></PageContainer></section>;
+  return (
+    <section id="success-stories" className="journey-section">
+      <PageContainer>
+        <Reveal className="journey-heading">
+          <div><p className="eyebrow">A clear way forward</p><h2 className="display-title">Big life decisions.<br /><em className="text-gold-dark">Four thoughtful steps.</em></h2></div>
+          <p className="journey-intro">You bring the ambition. We help turn the questions, choices and paperwork into a journey you can understand.</p>
+        </Reveal>
+        <div className="journey-route" aria-hidden="true"><span>Your ambition</span><div><i /><i /><i /><JourneyIcon name="plane" /></div><span>Your next chapter</span></div>
+        <ol className="journey-grid">
+          {journey.map((stage, index) => <li key={stage.label}><Reveal delay={index * .05} className="journey-step"><div className="journey-step-top"><span className="journey-icon"><JourneyIcon name={stage.icon} /></span><span className="journey-number">0{index + 1}</span></div><p className="journey-label">{stage.label}</p><h3>{stage.title}</h3><p className="journey-description">{stage.description}</p><div className="journey-outcome"><span aria-hidden="true">↗</span>{stage.outcome}</div></Reveal></li>)}
+        </ol>
+        <div className="journey-footer"><p>Your pathway starts with a conversation.</p><Link to="/appointment">Let’s talk about your plans <JourneyIcon name="arrow" /></Link></div>
+      </PageContainer>
+    </section>
+  );
 }
