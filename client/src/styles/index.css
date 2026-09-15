@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #071a33;
+  --color-brand-light: #102b50;
+  --color-gold: #c9a227;
+  --color-gold-light: #dfc467;
+  --color-gold-dark: #917315;
+  --color-cream: #f9f6ef;
+  --color-ink: #111111;
+  --color-ink-muted: #626264;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --shadow-card: 0 12px 36px rgba(7, 26, 51, 0.07);
+  --shadow-card-hover: 0 18px 50px rgba(7, 26, 51, 0.13);
+}
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color: #111111;
+  background: #f9f6ef;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f9f6ef;
+}
+
+img, video, svg { max-width: 100%; }
+
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, a { touch-action: manipulation; }
+::selection { color: #071a33; background: rgba(201, 162, 39, 0.35); }
+
+.form-control {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid rgba(7, 26, 51, 0.18);
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  color: #111;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.form-control:focus {
+  border-color: #c9a227;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.16);
+}
+
+.form-control[aria-invalid='true'] { border-color: #b91c1c; }
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #917315;
+}
+
+.display-title {
+  margin-top: 1.25rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: #071a33;
+}
+
+.display-title em { font-style: normal; font-weight: 600; }
+
+/* Public-site visual system is scoped so the completed admin dashboard keeps its existing theme. */
+.public-site {
+  --color-brand: #071a33;
+  --color-brand-light: #102b50;
+  --color-gold: #8fbfd9;
+  --color-gold-light: #dceff7;
+  --color-gold-dark: #477f9f;
+  --color-cream: #f4f6f8;
+  --color-ink: #152238;
+  --color-ink-muted: #5d6878;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+  --shadow-card: 0 10px 28px rgba(7, 26, 51, 0.055);
+  --shadow-card-hover: 0 16px 36px rgba(7, 26, 51, 0.1);
+  font-family: 'Inter', sans-serif;
+  color: #152238;
+  background: #f4f6f8;
+  overflow-x: clip;
+}
+
+.public-site .display-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+}
+
+.public-site em { font-style: normal; }
+.public-site h1,
+.public-site h2,
+.public-site h3 { text-wrap: balance; }
+.public-site p { text-wrap: pretty; }
+.public-site input,
+.public-site select,
+.public-site textarea { max-width: 100%; }
+
+.public-site .eyebrow { color: #477f9f; letter-spacing: 0.18em; }
+.public-site .form-control:focus { border-color: #8fbfd9; box-shadow: 0 0 0 3px rgba(143, 191, 217, 0.18); }
+.public-site [class~="rounded-[2rem]"] { border-radius: 1.25rem; }
+.public-site [class~="rounded-[1.6rem]"] { border-radius: 1rem; }
+.public-site .rounded-3xl { border-radius: 1rem; }
+.public-site ::selection { color: #071a33; background: rgba(143, 191, 217, 0.4); }
+
+@media (max-width: 639px) {
+  .public-site .py-24 { padding-block: 4.5rem; }
+  .public-site .py-20 { padding-block: 4rem; }
+  .public-site input,
+  .public-site select,
+  .public-site textarea { font-size: 1rem; }
+}
+
+@media (min-width: 640px) {
+  .public-site .sm\:text-6xl,
+  .public-site .sm\:text-7xl { font-size: 3.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .public-site .lg\:text-7xl,
+  .public-site .lg\:text-8xl { font-size: 3.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+@media (hover: none) {
+  .group .opacity-0 { opacity: 1; transform: none; }
+}

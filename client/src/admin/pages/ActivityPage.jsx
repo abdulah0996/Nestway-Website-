@@ -1,0 +1,15 @@
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useSeo } from '../../hooks/useSeo.js';
+import { AdminEmpty, AdminError, AdminPageHeader, AdminPanel, adminInputClass, FieldLabel } from '../components/AdminUi.jsx';
+import { getActivities } from '../services/adminApi.js';
+
+export function ActivityPage() {
+  useSeo({ title: 'Admin activity logs', description: 'Review Nestway administrative activity.' });
+  const [module, setModule] = useState('');
+  const [page, setPage] = useState(1);
+  const query = useQuery({ queryKey: ['admin', 'activity', module, page], queryFn: () => getActivities({ module: module || undefined, page, limit: 25 }) });
+  const activities = query.data?.items || [];
+  const pagination = query.data?.pagination;
+  return <div className="space-y-7"><AdminPageHeader eyebrow="Accountability" title="Activity logs" description="A chronological record of administrative changes across content, leads, bookings and media." /><AdminPanel className="p-5"><div className="max-w-sm"><FieldLabel label="Filter by module"><input value={module} onChange={(event) => { setModule(event.target.value.toLowerCase()); setPage(1); }} placeholder="e.g. leads, blogs, media" className={adminInputClass} /></FieldLabel></div></AdminPanel><AdminPanel>{query.isPending ? <div className="p-12 text-center text-sm text-ink-muted">Loading activity history…</div> : query.isError ? <div className="p-5"><AdminError message={query.error?.message} onRetry={() => query.refetch()} /></div> : activities.length ? <ol>{activities.map((activity, index) => <li key={activity._id} className="grid gap-4 border-b border-brand/8 p-5 sm:grid-cols-[3rem_1fr_auto] sm:items-center"><span className="grid size-10 place-items-center rounded-full bg-brand text-xs font-bold text-gold-light">{String(index + 1).padStart(2, '0')}</span><div><p className="font-bold text-brand">{activity.description}</p><p className="mt-1 text-xs text-ink-muted"><span className="capitalize">{activity.adminUser ? `${activity.adminUser.firstName} ${activity.adminUser.lastName}` : 'Administrator'}</span> · <span className="capitalize">{activity.module}</span> · {activity.action.replaceAll('_', ' ')}</p></div><time dateTime={activity.createdAt} className="text-xs text-ink-muted sm:text-right">{new Date(activity.createdAt).toLocaleString('en', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</time></li>)}</ol> : <AdminEmpty title="No activity found" description="Administrative changes will be recorded here." />}{pagination?.pages > 1 && <div className="flex items-center justify-between p-5"><button disabled={page <= 1} onClick={() => setPage((value) => value - 1)} className="rounded-full border border-brand/12 px-4 py-2 text-xs font-bold disabled:opacity-30">Previous</button><span className="text-xs text-ink-muted">Page {page} of {pagination.pages}</span><button disabled={page >= pagination.pages} onClick={() => setPage((value) => value + 1)} className="rounded-full border border-brand/12 px-4 py-2 text-xs font-bold disabled:opacity-30">Next</button></div>}</AdminPanel></div>;
+}
