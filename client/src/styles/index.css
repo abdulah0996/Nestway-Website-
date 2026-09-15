@@ -33,9 +33,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: #f9f6ef;
+  overflow-x: hidden;
 }
 
-img, video, svg { max-width: 100%; }
+img, video, svg { display: block; max-width: 100%; }
 
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button, a { touch-action: manipulation; }
@@ -117,6 +118,33 @@ button, a { touch-action: manipulation; }
 .public-site select,
 .public-site textarea { max-width: 100%; }
 
+.public-site main,
+.public-site section,
+.public-site article,
+.public-site div { min-width: 0; }
+
+.mobile-snap-row {
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-snap-row::-webkit-scrollbar { display: none; }
+
+.mobile-snap-card {
+  flex: 0 0 calc(100vw - 3rem);
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .mobile-snap-card--destination { flex-basis: 26rem; }
+  .mobile-snap-card--testimonial { flex-basis: 25rem; }
+}
+
+@media (min-width: 768px) {
+  .mobile-snap-card--testimonial { flex: 1 1 0%; }
+}
+
 .public-site .eyebrow { color: #477f9f; letter-spacing: 0.18em; }
 .public-site .form-control:focus { border-color: #8fbfd9; box-shadow: 0 0 0 3px rgba(143, 191, 217, 0.18); }
 .public-site [class~="rounded-[2rem]"] { border-radius: 1.25rem; }
@@ -125,8 +153,10 @@ button, a { touch-action: manipulation; }
 .public-site ::selection { color: #071a33; background: rgba(143, 191, 217, 0.4); }
 
 @media (max-width: 639px) {
-  .public-site .py-24 { padding-block: 4.5rem; }
-  .public-site .py-20 { padding-block: 4rem; }
+  .public-site .py-24 { padding-block: 3.75rem; }
+  .public-site .py-20 { padding-block: 3.5rem; }
+  .public-site .display-title { font-size: clamp(2rem, 10.5vw, 2.55rem); line-height: 1.02; }
+  .public-site .eyebrow { font-size: 0.64rem; letter-spacing: 0.16em; }
   .public-site input,
   .public-site select,
   .public-site textarea { font-size: 1rem; }
