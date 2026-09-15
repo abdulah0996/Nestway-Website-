@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Nestway Immigration full-stack platform",
+  "main": "server/src/server.js",
   "engines": {
     "node": ">=20"
   },
@@ -16,7 +17,7 @@
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build": "npm run build --workspace nestway-client",
-    "start": "npm run start --prefix server"
+    "start": "node server/src/server.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
