@@ -1,3 +1,5 @@
+import nestwayLogo from './nestway-logo.jpeg';
+
 const editorialUrl = (photoId, width = 1800) =>
   `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${width}&q=82`;
 
@@ -32,5 +34,5 @@ export const trainingImages = {
 };
 
 export const brandAssets = {
-  logo: 'https://nestwayimmigration.com/wp-content/uploads/2026/05/nestway-logo.jpg',
+  logo: nestwayLogo,
 };

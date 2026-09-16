@@ -36,8 +36,8 @@ export function AboutAgencySection() {
           </Reveal>
         </div>
 
-        <div className="mt-16 grid gap-px overflow-hidden rounded-[2rem] border border-brand/10 bg-brand/10 md:grid-cols-3">
-          {principles.map(([title, description], index) => <Reveal key={title} className="bg-cream"><div className="h-full p-8"><span className="text-xs font-bold text-gold-dark">0{index + 1}</span><h3 className="mt-7 font-display text-3xl font-semibold text-brand">{title}</h3><p className="mt-4 leading-7 text-ink-muted">{description}</p></div></Reveal>)}
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[2rem] border border-brand/10 bg-brand/10 sm:mt-16 md:grid-cols-3">
+          {principles.map(([title, description], index) => <Reveal key={title} className="bg-cream"><div className="h-full p-6 sm:p-8"><span className="text-xs font-bold text-gold-dark">0{index + 1}</span><h3 className="mt-5 font-display text-2xl font-semibold text-brand sm:mt-7 sm:text-3xl">{title}</h3><p className="mt-3 text-sm leading-6 text-ink-muted sm:mt-4 sm:text-base sm:leading-7">{description}</p></div></Reveal>)}
         </div>
       </PageContainer>
     </section>
